@@ -65,13 +65,14 @@ class Element:
 			raise ElementError("Invalid element, no element file")
 
 		# read element file
-		cfg = ConfigParser.SafeConfigParser()
-		cfg.read(elemFile)
-		if not cfg.has_section("Element Entry"):
+		cfgparser = ConfigParser.SafeConfigParser()
+		cfgparser.optionxform = str				# make option names case-sensitive
+		cfgparser.read(elemFile)
+		if not cfgparser.has_section("Element Entry"):
 			raise ElementError("Invalid element, no [Element Entry] section in element file")
 
 		# parse element file, ignore unknown properties
-		for name, value in cfg.items("Element Entry"):
+		for name, value in cfgparser.items("Element Entry"):
 			m = re.match("^Name(\\[(.*)\\])?$", name)
 			if m is not None:
 				if m.group(1) == "":
