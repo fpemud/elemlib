@@ -54,8 +54,8 @@ class Element:
 	def _init(self, path, mode):
 		self.path = path
 		self.open_mode = mode
-		self.nameDict = []
-		self.commentDict = []
+		self.nameDict = dict()
+		self.commentDict = dict()
 		self.elem_type = ""
 		self.elem_fp = None
 
@@ -75,7 +75,7 @@ class Element:
 		for name, value in cfgparser.items("Element Entry"):
 			m = re.match("^Name(\\[(.*)\\])?$", name)
 			if m is not None:
-				if m.group(1) == "":
+				if m.group(2) is None:
 					self.nameDict["C"] = value
 				else:
 					self.nameDict[m.group(2)] = value
@@ -83,7 +83,7 @@ class Element:
 
 			m = re.match("^Comment(\\[(.*)\\])?$", name)
 			if m is not None:
-				if m.group(1) == "":
+				if m.group(2) is None:
 					self.commentDict["C"] = value
 				else:
 					self.commentDict[m.group(2)] = value
