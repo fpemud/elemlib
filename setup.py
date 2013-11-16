@@ -8,7 +8,6 @@ except:
     # Fall back if setuptools is not installed.
     from distutils.core import setup
 
-# Do setup
 classif = [
     'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
@@ -28,6 +27,13 @@ classif = [
     'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 
+# Select branch
+if sys.version_info >= (3, 0):
+    package_dir = {'': 'python3'}
+else:
+    package_dir = {'': 'python2'}
+
+# Do setup
 setup(
     name='elemlib',
     version='0.0.1',
