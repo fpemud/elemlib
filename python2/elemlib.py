@@ -39,7 +39,7 @@ __author__ = "fpemud@sina.com (Fpemud)"
 __version__ = "0.0.1"
 
 
-class ElementError(Exception):
+class InvalidElementError(Exception):
 	pass
 
 #class ElementChooserDialog:
@@ -62,14 +62,14 @@ class Element:
 		# check element file
 		elemFile = os.path.join(path, os.path.basename(path) + ".elem")
 		if not os.path.exists(elemFile):
-			raise ElementError("Invalid element, no element file")
+			raise InvalidElementError("no element file")
 
 		# read element file
 		cfgparser = ConfigParser.SafeConfigParser()
 		cfgparser.optionxform = str				# make option names case-sensitive
 		cfgparser.read(elemFile)
 		if not cfgparser.has_section("Element Entry"):
-			raise ElementError("Invalid element, no [Element Entry] section in element file")
+			raise InvalidElementError("no [Element Entry] section in element file")
 
 		# parse element file, ignore unknown properties
 		for name, value in cfgparser.items("Element Entry"):
@@ -95,11 +95,11 @@ class Element:
 
 
 		if "C" not in self.nameDict:
-			raise ElementError("Invalid element, no Name property in element file")
+			raise InvalidElementError("no Name property in element file")
 		if "C" not in self.commentDict:
-			raise ElementError("Invalid element, no Comment property in element file")
+			raise InvalidElementError("no Comment property in element file")
 		if self.elem_type == "":
-			raise ElementError("Invalid element, no Type property in element file")
+			raise InvalidElementError("no Type property in element file")
 
 		# lock element, the lock will auto released if the process exits
 		self.elem_fp = open(elemFile, "r")
@@ -149,7 +149,7 @@ def open_element(path, mode):
 	assert mode == "ro" or mode == "rw"
 
 	if not os.path.isdir(path):
-		raise ElementError("Invalid element, not a directory")
+		raise InvalidElementError("not a directory")
 
 	ret = Element()
 	ret._init(path, mode)
