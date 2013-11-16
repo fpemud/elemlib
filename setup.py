@@ -2,12 +2,25 @@
 
 # import statements
 import sys
+from distutils.util import get_platform
 try:
     # First try to load most advanced setuptools setup.
     from setuptools import setup
 except:
     # Fall back if setuptools is not installed.
     from distutils.core import setup
+
+platform = get_platform()
+
+# check Python's version
+if sys.version_info < (2, 7):
+    sys.stderr.write('This module requires at least Python 2.7\n')
+    sys.exit(1)
+
+# check linux platform
+if not platform.startswith('linux'):
+    sys.stderr.write("This module is not available on %s\n" % platform)
+    sys.exit(1)
 
 classif = [
     'Development Status :: 5 - Production/Stable',
