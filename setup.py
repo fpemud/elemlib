@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # import statements
+import sys
 try:
     # First try to load most advanced setuptools setup.
     from setuptools import setup
