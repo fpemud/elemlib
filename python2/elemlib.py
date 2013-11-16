@@ -29,7 +29,9 @@ elemlib
 """
 
 import os
+import re
 import fcntl
+import ConfigParser
 
 
 __author__ = "fpemud@sina.com (Fpemud)"
@@ -45,7 +47,7 @@ class ElementError(Exception):
 
 class Element:
 
-	def __init___(self):
+	def __init__(self):
 		# should prevent call from places other than openElement function
 		pass
 
@@ -95,7 +97,7 @@ class Element:
 			raise ElementError("Invalid element, no Name property in element file")
 		if "C" not in self.commentDict:
 			raise ElementError("Invalid element, no Comment property in element file")
-		if self.elem_type == ""
+		if self.elem_type == "":
 			raise ElementError("Invalid element, no Type property in element file")
 
 		# lock element, the lock will auto released if the process exits
@@ -129,7 +131,7 @@ class Element:
 	def get_type(self):
 		return self.elem_type
 
-def is_element(self, path):
+def is_element(path):
 	assert os.path.isabs(path)
 
 	if not os.path.isdir(path):
@@ -141,7 +143,7 @@ def is_element(self, path):
 
 	return True
 
-def open_element(self, path, mode):
+def open_element(path, mode):
 	assert os.path.isabs(path)
 	assert mode == "ro" or mode == "rw"
 
