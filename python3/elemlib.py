@@ -143,7 +143,7 @@ class Element:
 		self.elem_fp = None
 
 		self.elem_info = ElementInfo()
-		self.elem_info.load()
+		self.elem_info.load(self.path)
 
 		# lock element, the lock will auto released if the process exits
 		elemFile = os.path.join(path, os.path.basename(path) + ".elem")
