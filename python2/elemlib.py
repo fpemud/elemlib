@@ -45,22 +45,19 @@ class InvalidElementError(Exception):
 #class ElementChooserDialog:
 #	pass
 
-class Element:
+class ElementInfo:
 
 	def __init__(self):
-		# should prevent call from places other than openElement function
-		pass
+		self.etype = None
+		self.name_dict = dict()
+		self.comment_dict = dict()
+		self.source = None
+		self.author = None
+		self.homepage = None
 
-	def _init(self, path, mode):
-		self.path = path
-		self.open_mode = mode
-		self.nameDict = dict()
-		self.commentDict = dict()
-		self.elem_type = ""
-		self.elem_fp = None
-
+	def load(self, elem_path):
 		# check element file
-		elemFile = os.path.join(path, os.path.basename(path) + ".elem")
+		elemFile = os.path.join(elem_path, os.path.basename(elem_path) + ".elem")
 		if not os.path.exists(elemFile):
 			raise InvalidElementError("no element file")
 
@@ -76,32 +73,80 @@ class Element:
 			m = re.match("^Name(\\[(.*)\\])?$", name)
 			if m is not None:
 				if m.group(2) is None:
-					self.nameDict["C"] = value
+					self.name_dict["C"] = value
 				else:
-					self.nameDict[m.group(2)] = value
+					self.name_dict[m.group(2)] = value
 				continue
 
 			m = re.match("^Comment(\\[(.*)\\])?$", name)
 			if m is not None:
 				if m.group(2) is None:
-					self.commentDict["C"] = value
+					self.comment_dict["C"] = value
 				else:
-					self.commentDict[m.group(2)] = value
+					self.comment_dict[m.group(2)] = value
 				continue
 
 			if name == "Type":
-				self.elem_type = value
+				self.etype = value
 				continue
 
+			if name == "Source":
+				self.source = value
+				continue
 
-		if "C" not in self.nameDict:
+			if name == "Author":
+				self.author = value
+				continue
+
+			if name == "Homepage":
+				self.homepage = value
+				continue
+
+		if "C" not in self.name_dict:
 			raise InvalidElementError("no Name property in element file")
-		if "C" not in self.commentDict:
+		if "C" not in self.comment_dict:
 			raise InvalidElementError("no Comment property in element file")
-		if self.elem_type == "":
+		if self.etype is None:
 			raise InvalidElementError("no Type property in element file")
 
+	def save(self, elem_path):
+		assert False
+
+	def get_type(self):
+		return self.etype
+
+	def get_name(self):
+		return self.name_dict["C"]
+
+	def get_comment(self):
+		return self.comment_dict["C"]
+
+	def get_source(self):
+		return self.source
+
+	def get_author(self):
+		return self.author
+
+	def get_homepage(self):
+		return self.homepage
+
+class Element:
+
+	def __init__(self):
+		# should prevent call from places other than openElement function
+		pass
+
+	def _init(self, path, mode):
+		self.path = path
+		self.open_mode = mode
+		self.elem_info = None
+		self.elem_fp = None
+
+		self.elem_info = ElementInfo()
+		self.elem_info.load()
+
 		# lock element, the lock will auto released if the process exits
+		elemFile = os.path.join(path, os.path.basename(path) + ".elem")
 		self.elem_fp = open(elemFile, "r")
 		try:
 			if mode == "ro":
@@ -123,14 +168,8 @@ class Element:
 	def get_open_mode(self):
 		return self.open_mode
 
-	def get_name(self):
-		return self.nameDict["C"]
-
-	def get_comment(self):
-		return self.commentDict["C"]
-
-	def get_type(self):
-		return self.elem_type
+	def get_info(self):
+		return self.elem_info
 
 def is_element(path):
 	assert os.path.isabs(path)
@@ -144,6 +183,13 @@ def is_element(path):
 
 	return True
 
+def get_element_info(path):
+	assert os.path.isabs(path)
+
+	elemInfo = ElementInfo()
+	elemInfo.load(path)
+	return elemInfo
+
 def open_element(path, mode):
 	assert os.path.isabs(path)
 	assert mode == "ro" or mode == "rw"
@@ -154,5 +200,4 @@ def open_element(path, mode):
 	ret = Element()
 	ret._init(path, mode)
 	return ret
-
 
