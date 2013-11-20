@@ -57,7 +57,7 @@ class ElementInfo:
 
 	def load(self, elem_path):
 		# check element file
-		elemFile = os.path.join(elem_path, os.path.basename(elem_path) + ".elem")
+		elemFile = os.path.join(elem_path, "element.ini")
 		if not os.path.exists(elemFile):
 			raise InvalidElementError("no element file")
 
@@ -146,7 +146,7 @@ class Element:
 		self.elem_info.load(self.path)
 
 		# lock element, the lock will auto released if the process exits
-		elemFile = os.path.join(path, os.path.basename(path) + ".elem")
+		elemFile = os.path.join(path, "element.ini")
 		self.elem_fp = open(elemFile, "r")
 		try:
 			if mode == "ro":
@@ -177,7 +177,7 @@ def is_element(path):
 	if not os.path.isdir(path):
 		return False
 
-	elemFile = os.path.join(path, os.path.basename(path) + ".elem")
+	elemFile = os.path.join(path, "element.ini")
 	if not os.path.exists(elemFile):
 		return False
 
