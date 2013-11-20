@@ -45,6 +45,79 @@ class InvalidElementError(Exception):
 #class ElementChooserDialog:
 #	pass
 
+class ElementIniBuilderError(Exception):
+	pass
+
+class ElementIniBuilder:
+
+	def __init__(self):
+		self.etype = None
+		self.name_dict = dict()
+		self.comment_dict = dict()
+		self.source = None
+		self.author = None
+		self.homepage = None
+
+	def set_type(self, etype):
+		assert isinstance(etype, str) and etype != ""
+		self.etype = etype
+
+	def set_name(self, lang, name):
+		assert isinstance(lang, str) and lang != ""
+		assert isinstance(name, str)
+		self.name_dict[lang] = name
+
+	def set_comment(self, lang, comment):
+		assert isinstance(lang, str) and lang != ""
+		assert isinstance(comment, str)
+		self.name_dict[lang] = comment
+
+	def set_source(self, source):
+		assert source is None or isinstance(source, str)
+		self.source = source
+
+	def set_author(self, author):
+		assert author is None or isinstance(author, str)
+		self.author = author
+
+	def set_homepage(self, homepage):
+		assert homepage is None or isinstance(homepage, str)
+		self.homepage = homepage
+
+	def save(self, filename):
+		assert os.path.basename(filename) == "element.ini"
+
+		# do checking
+		if self.etype is None:
+			raise ElementIniBuilderError("no Type property")
+		if "C" not in self.name_dict:
+			raise ElementIniBuilderError("no Name property")
+		if "C" not in self.comment_dict:
+			raise ElementIniBuilderError("no Comment property")
+
+		# write file
+		f = open(filename, "w")
+		f.write("[Element Entry]\n")
+
+		f.write("Name=%s\n"%(self.name_dict["C"]))
+		for k, v in self.name_dict.items():
+			f.write("Name[%s]=%s\n"%(k, v))
+
+		f.write("Comment=%s\n"%(self.comment_dict["C"]))
+		for k, v in self.comment_dict.items():
+			f.write("Comment[%s]=%s\n"%(k, v))
+
+		f.write("Type=%s\n"%(self.etype))
+
+		if self.source is not None:
+			f.write("Source=%s\n"%(self.source))
+		if self.author is not None:
+			f.write("Author=%s\n"%(self.author))
+		if self.homepage is not None:
+			f.write("Homepage=%s\n"%(self.homepage))
+
+		f.close()
+
 class ElementInfo:
 
 	def __init__(self):
@@ -108,9 +181,6 @@ class ElementInfo:
 			raise InvalidElementError("no Comment property in element file")
 		if self.etype is None:
 			raise InvalidElementError("no Type property in element file")
-
-	def save(self, elem_path):
-		assert False
 
 	def get_type(self):
 		return self.etype
