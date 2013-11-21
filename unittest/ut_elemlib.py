@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+sys.path.append('../python2')
 import elemlib
 
 ret = elemlib.is_element("/home/fpemud/Virtual Machines/common")
