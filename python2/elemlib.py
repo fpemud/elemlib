@@ -66,6 +66,10 @@ class ElementInfo:
 			raise InvalidElementError("no Name property in element file")
 		if self.kf.get_value("Element Entry", "Type") is None:
 			raise InvalidElementError("no Type property in element file")
+		if self.kf.get_value("Element Entry", "Format") is not None:
+			s = self.kf.get_string("Element Entry", "Format")
+			if s != "simple" and s != "full":
+				raise InvalidElementError("invalid Format property in element file")
 
 	def get_type(self):
 		return self.kf.get_string("Element Entry", "Type")
@@ -96,6 +100,13 @@ class ElementInfo:
 			return self.kf.get_string("Element Entry", "Homepage")
 		except:
 			return None
+
+	def _get_format(self):
+		value = self.kf.get_string("Element Entry", "Format")
+		if value is None:
+			return "simple"
+		else:
+			return value
 
 class Element:
 
@@ -137,6 +148,26 @@ class Element:
 
 	def get_info(self):
 		return self.elem_info
+
+	def get_data_dir(self):
+		if self.elem_info._get_format() == "full":
+			return os.path.join(self.path, "data")
+		else:
+			return self.path
+
+	def get_cache_dir(self):
+		if self.elem_info._get_format() == "full":
+			return os.path.join(self.path, "cache")
+		else:
+			return None
+
+	def get_revision_dirs(self):
+		"""Returns directory list, the revision should be applied one by one"""
+
+		ret = []
+		if self.elem_info._get_format() == "full":
+			ret.append(os.path.join(self.path, "revision"))
+		return ret
 
 def is_element(path):
 	assert os.path.isabs(path)

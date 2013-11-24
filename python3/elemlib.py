@@ -66,6 +66,10 @@ class ElementInfo:
 			raise InvalidElementError("no Name property in element file")
 		if self.kf.get_value("Element Entry", "Type") is None:
 			raise InvalidElementError("no Type property in element file")
+		if self.kf.get_value("Element Entry", "Format") is not None:
+			s = self.kf.get_string("Element Entry", "Format")
+			if s != "simple" and s != "full":
+				raise InvalidElementError("invalid Format property in element file")
 
 	def get_type(self):
 		return self.kf.get_string("Element Entry", "Type")
@@ -96,6 +100,13 @@ class ElementInfo:
 			return self.kf.get_string("Element Entry", "Homepage")
 		except:
 			return None
+
+	def _get_format(self):
+		value = self.kf.get_string("Element Entry", "Format")
+		if value is None:
+			return "simple"
+		else:
+			return value
 
 class Element:
 
@@ -138,6 +149,26 @@ class Element:
 	def get_info(self):
 		return self.elem_info
 
+	def get_data_dir(self):
+		if self.elem_info._get_format() == "full":
+			return os.path.join(self.path, "data")
+		else:
+			return self.path
+
+	def get_cache_dir(self):
+		if self.elem_info._get_format() == "full":
+			return os.path.join(self.path, "cache")
+		else:
+			return None
+
+	def get_revision_dirs(self):
+		"""Returns directory list, the revision should be applied one by one"""
+
+		ret = []
+		if self.elem_info._get_format() == "full":
+			ret.append(os.path.join(self.path, "revision"))
+		return ret
+
 def is_element(path):
 	assert os.path.isabs(path)
 
@@ -167,50 +198,4 @@ def open_element(path, mode):
 	ret = Element()
 	ret._init(path, mode)
 	return ret
-
-
-
-
-
-#		# read element file
-#		cfgparser = ConfigParser.SafeConfigParser()
-#		cfgparser.optionxform = str				# make option names case-sensitive
-#		cfgparser.read(elemFile)
-#		if not cfgparser.has_section("Element Entry"):
-#			raise InvalidElementError("no [Element Entry] section in element file")
-#
-#		# parse element file, ignore unknown properties
-#		for name, value in cfgparser.items("Element Entry"):
-#			m = re.match("^Name(\\[(.*)\\])?$", name)
-#			if m is not None:
-#				if m.group(2) is None:
-#					self.name_dict["C"] = value
-#				else:
-#					self.name_dict[m.group(2)] = value
-#				continue
-#
-#			m = re.match("^Comment(\\[(.*)\\])?$", name)
-#			if m is not None:
-#				if m.group(2) is None:
-#					self.comment_dict["C"] = value
-#				else:
-#					self.comment_dict[m.group(2)] = value
-#				continue
-#
-#			if name == "Type":
-#				self.etype = value
-#				continue
-#
-#			if name == "Source":
-#				self.source = value
-#				continue
-#
-#			if name == "Author":
-#				self.author = value
-#				continue
-#
-#			if name == "Homepage":
-#				self.homepage = value
-#				continue
-#
 
