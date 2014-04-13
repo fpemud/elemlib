@@ -30,6 +30,7 @@ elemlib
 
 import os
 import fcntl
+import errno
 from gi.repository import GLib
 
 __author__ = "fpemud@sina.com (Fpemud)"
@@ -37,13 +38,13 @@ __author__ = "fpemud@sina.com (Fpemud)"
 __version__ = "0.0.1"
 
 
-class InvalidElementError(Exception):
+class ElementError(Exception):
 	pass
 
-#class ElementChooserDialog:
-#	pass
+class ElementValidateError(ElementError):
+	pass
 
-class ElementIniBuilderError(Exception):
+class ElementAccessError(ElementError):
 	pass
 
 class ElementInfo:
@@ -55,21 +56,21 @@ class ElementInfo:
 		# check element file
 		elemFile = os.path.join(elem_path, "element.ini")
 		if not os.path.exists(elemFile):
-			raise InvalidElementError("no element file")
+			raise ElementValidateError("no element file")
 
 		# read element file
 		self.kf = GLib.KeyFile()
 		self.kf.load_from_file(elemFile, GLib.KeyFileFlags.NONE)
 		if not self.kf.has_group("Element Entry"):
-			raise InvalidElementError("no [Element Entry] section in element file")
+			raise ElementValidateError("no [Element Entry] section in element file")
 		if self.kf.get_value("Element Entry", "Name") is None:
-			raise InvalidElementError("no Name property in element file")
+			raise ElementValidateError("no Name property in element file")
 		if self.kf.get_value("Element Entry", "Type") is None:
-			raise InvalidElementError("no Type property in element file")
+			raise ElementValidateError("no Type property in element file")
 		if self.kf.get_value("Element Entry", "Format") is not None:
 			s = self.kf.get_string("Element Entry", "Format")
 			if s != "simple" and s != "full":
-				raise InvalidElementError("invalid Format property in element file")
+				raise ElementValidateError("invalid Format property in element file")
 
 	def get_type(self):
 		return self.kf.get_string("Element Entry", "Type")
@@ -120,6 +121,9 @@ class Element:
 		self.elem_info = None
 		self.elem_fp = None
 
+		if not os.path.isdir(path):
+			raise ElementValidateError("not a directory")
+
 		self.elem_info = ElementInfo()
 		self.elem_info.load(self.path)
 
@@ -129,11 +133,16 @@ class Element:
 		try:
 			if mode == "ro":
 				fcntl.flock(self.elem_fp, fcntl.LOCK_SH | fcntl.LOCK_NB)
-			else:
+			elif mode == "rw":
 				fcntl.flock(self.elem_fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-		except:
+			else:
+				assert False
+		except Exception as e:
 			self.elem_fp.close()			
-			raise
+			if isinstance(e, IOError) and (e.errno == errno.EAGAIN or e.errno == errno.EACCES):
+				raise ElementAccessError("not accessible using mode \"%s\""%(mode))
+			else:
+				raise
 
 	def close(self):
 		# unlock element
