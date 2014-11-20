@@ -1,0 +1,18 @@
+"element" is the core concept of Element Desktop.
+With this concept, you can manage all your electronic belongings in an orgnized, fully customized, gradually improving way.
+
+An "element" is a directory with description file "element.ini".
+It can represent anything, with arbitrary classification method.
+User will read/view/use it frequently, but edit it seldomly, so they can view the element as a whole and pay little attention to the its content.
+
+Story 1:
+
+I manage all my movies as "movie elements".
+I use application "elem-totem" to play them. What I do is to select the element directory and it plays.
+my movies have different video format, like *.avi, *.mkv or *.rmvb, but it doesn't borther me since the only thing comes into my eye is the element directory, it's a 
+consistent, perfect view.
+As time passes by, I get larger hard disk and the bluray version of some movies, I can put *.ts files beside the original *.rmvb file. But it puts no change in my 
+opertaion as a user, still simply select the element directory.
+"elem-totem" should decide which format should be used.
+"elem-sync" should decide what part of this movie element should be copied to the smartphone.
+"elem-browser" should give me a suitable preview for this movie element.

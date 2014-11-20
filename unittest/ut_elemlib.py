@@ -20,4 +20,3 @@ ret.close()
 
 ret = elemlib.open_element("/home/fpemud/Virtual Machines/common", "rw")
 ret.close()
-

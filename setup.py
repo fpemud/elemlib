@@ -39,7 +39,7 @@ classif = [
     'Programming Language :: Python :: 3.1',
     'Programming Language :: Python :: 3.2',
     'Topic :: Software Development :: Libraries :: Python Modules',
-    ]
+]
 
 # Select branch
 if sys.version_info >= (3, 0):
@@ -61,4 +61,4 @@ setup(
     download_url='',
     py_modules=['elemlib'],
     package_dir=package_dir,
-    )
+)
