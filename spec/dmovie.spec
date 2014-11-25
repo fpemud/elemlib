@@ -1,3 +1,17 @@
+directory structure:
+
+  element/
+    |---- element.ini
+    |---- movie_info.xml
+    |---- movie-data-file
+
+
+element.ini example:
+
+
+
+movie_info.xml example:
+
 <?xml version="1.0" encoding="UTF-8"?>
 <movie-info>
 	<runtime>165</runtime>
@@ -17,9 +31,9 @@
 	</defects>
 
 	<file-filter filename="data1/cd2.rmvb">
-		<trim>5:</trim>
+		<left-trim unit="second">5</left-trim>
 	</file-filter>
 	<file-filter filename="data1/cd3.rmvb">
-		<trim>5:</trim>
+		<left-trim unit="second">5</left-trim>
 	</file-filter>
 </movie-info>
