@@ -28,12 +28,8 @@ movie_info.xml example:
 		<watermark/>
 		<embed-subtitles/>
 		<shot-version/>
+		<incomplete/>
+		<trim-needed/>
+		<no-ts-par2/>
 	</defects>
-
-	<file-filter filename="data1/cd2.rmvb">
-		<left-trim unit="second">5</left-trim>
-	</file-filter>
-	<file-filter filename="data1/cd3.rmvb">
-		<left-trim unit="second">5</left-trim>
-	</file-filter>
 </movie-info>
