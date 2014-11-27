@@ -3,8 +3,10 @@ directory structure:
   element/
     |---- element.ini
     |---- movie_info.xml
-    |---- movie-data-file
-
+    |---- data1/
+    |       |---- video files
+    |---- data2/
+            |---- video files
 
 element.ini example:
 
@@ -22,6 +24,8 @@ movie_info.xml example:
 		<wikipedia lang="zh">http://zh.wikipedia.org/wiki/黑客帝国</wikipedia>
 		<imdb>http://www.imdb.com/title/tt0133093/?ref_=fn_al_tt_1</imdb>
 	</links>
+
+  <original-data>data1</original-data>
 
 	<defects>
 		<split-file/>
