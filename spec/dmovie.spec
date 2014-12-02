@@ -24,7 +24,7 @@ movie_info.xml example:
 		<imdb>http://www.imdb.com/title/tt0133093/?ref_=fn_al_tt_1</imdb>
 	</links>
 
-	<data directory="data1">
+	<data directory="data0">
 		<original/>
 		<defects>
 			<watermark/>
