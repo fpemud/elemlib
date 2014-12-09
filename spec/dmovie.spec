@@ -61,19 +61,30 @@ priority:
 3. audio codec
 
 video-format:
+1. h264				H.264 (MPEG-4 AVC, MPEG-4 Part 10)
 1. vc-1				VC-1
-2. 
+2. mpeg-2			MPEG-2
 
 audio-format:
-1. dts				DTS
+1. lpcm				Linear PCM																						lossless
+1. truehd			Dolby True HD																					lossless
+1. dts-hd-ma	DTS-HD Master Audio																		lossless
+2. dts-hd-hra	DTS-HD High Resolution Audio
+3. e-ac-3			Dolby Digital Plus (Dolby Enhanced AC-3)
+4. dts				DTS
+5. ac-3				Dolby Surround Audio Coding-3
 
 channels:
-1. 5.1
-2. 2.0
+1. 7.1
+2. 6.1
+3. 5.1
+4. 2.1
+5. 2.0
+6. 1.0
 
 aspect-ratio:
 1. 16:9
-2. 
+2. 4:3
 
 bit-rate:
 1. Nkbps
@@ -104,10 +115,28 @@ bit-depth:
 10
 11
 16
-16f
+16f			16-bit float
 20
 24
-24f
+24f			24-bit float
 32
-32f
-64f
+32f			32-bit float
+64f			64-bit float
+
+
+H264 bitrate settings
+
+size geometry bitrate-suggeested
+480P 720X480 1800Kbps 
+720P 1280X720 3500Kbps 
+1080P 1920X1080 8500Kbps 
+
+Project formula 192X144 320X240 480X360 640X480 1280X720 1920X1080
+very-low （width X height X 3）/ 4 30kb/s 60kb/s 120kps 250kbps 500kbps 1mbps
+low （width X height X 3）/ 2 60kb/s 120kb/s 250kbps 500kbps 1mbps 2mbps
+medium （width X height X 3) 120kb/s 250kb/s 500kbps 1mbps 2mbps 4mbps 
+high （width X height X 3）X 2 250kb/s 500kb/s 1mbps 2mbps 4mbps 8mps
+very-high （width X height X 3）X4 500kb/s 1mb/s 2mbps 4mbps 8mbps 16mbps
+
+
+ 
